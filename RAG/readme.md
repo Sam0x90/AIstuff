@@ -6,4 +6,7 @@ This script aims at converting the Mitre ATT&CK Enterprise json file into Markdo
 The md file can then be used as a knowledge base in Open WebUI for example to leverage RAG feature. The script doesn't create chunk/vector. This part is handled by Open WebUI at import. 
 
 
+![image](https://github.com/user-attachments/assets/e5db3c82-d056-408d-84d2-ff0aed3b05d3)
+
+
 ![image](https://github.com/user-attachments/assets/d4ed2b67-ffff-4172-9afe-794430b9a324)
