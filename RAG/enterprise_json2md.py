@@ -1,6 +1,5 @@
 import json
 import argparse
-import os
 
 def get_external_id(attack_pattern):
     for ref in attack_pattern.get("external_references", []):
@@ -28,31 +27,27 @@ def extract_refs(obj):
 
 def format_markdown(obj):
     ext_id = get_external_id(obj)
-    title = f"{ext_id} - {obj.get('name')}"
+    name = obj.get("name", "Unnamed Technique")
     tactics = get_tactics(obj)
-    platforms = extract_platforms(obj)
-    revoked = str(obj.get("revoked", False))
-    subtech = str(obj.get("x_mitre_is_subtechnique", False))
-    version = obj.get("x_mitre_version", "")
 
+    md = f"# {name}\n\n"
+    md += f"## Description\n{obj.get('description', '').strip()}\n\n"
+    md += "## Metadata\n"
+    md += f"**Technique ID:** {ext_id} \n"
+    md += f"**Tactic(s):** {tactics}\n\n"
 
-    md = f"# {title}\n\n"
-    md += f"**ID:** {ext_id}  \n"
-    md += f"**Tactic(s):** {tactics}  \n"
-    md += f"**Platform(s):** {platforms}  \n"
-    md += f"**Revoked:** {revoked}  \n"
-    md += f"**Sub-technique:** {subtech}  \n"
-    md += f"**Version:** {version}\n\n"
-    md += f"## Description\n{obj.get('description', '')}\n\n"
-    md += f"## Detection\n{obj.get('x_mitre_detection', '')}\n\n"
+    detection = obj.get("x_mitre_detection", "").strip()
+    if detection:
+        md += f"## Detection\n{detection}\n\n"
 
     data_sources = extract_data_sources(obj)
     if data_sources:
         md += "## Data Sources\n" + "\n".join([f"- {src}" for src in data_sources]) + "\n\n"
 
-    refs = extract_refs(obj)
-    if refs:
-        md += f"## References\n{refs}\n"
+    # If you want to add references
+    #refs = extract_refs(obj)
+    #if refs:
+    #    md += f"## References\n{refs}\n"
 
     return md
 
@@ -65,7 +60,9 @@ def main():
     with open(args.input_json, "r", encoding="utf-8") as f:
         bundle = json.load(f)
 
-    attack_patterns = [obj for obj in bundle.get("objects", []) if obj.get("type") == "attack-pattern"]
+    attack_patterns = [
+            obj for obj in bundle.get("objects", []) if obj.get("type") == "attack-pattern" and not obj.get("revoked", False)
+        ]
 
     with open(args.output_md, "w", encoding="utf-8") as out_file:
         for obj in attack_patterns:
