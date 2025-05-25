@@ -21,7 +21,13 @@ Reason: Scheduled tasks are used for persistence in this case, matching T1053.00
 ## Prompt
 Text: To evade detection, the malware disables Windows Defender by modifying the registry keys under HKLM\Software\Policies\Microsoft\Windows Defender.
 
-## Expected Answer
+## Expected Answer 1
+Technique ID: T1562.001
+Name: Disable or Modify Tools
+Matched Text: "disables Windows Defender by modifying the registry keys"
+Reason: The malware disables a security tool (Windows Defender) through registry modification, which aligns with the behavior described in the MITRE ATT&CK technique T1562.001 (Disable or Modify Tools).
+
+## Expected Answer 2
 Technique ID: T1112  
 Name: Modify Registry  
 Matched Text: "modifying the registry keys under `HKLM\Software\Policies\Microsoft\Windows Defender`"  
